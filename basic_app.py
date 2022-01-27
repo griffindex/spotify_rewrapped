@@ -12,7 +12,7 @@ from spotipy.oauth2 import SpotifyOAuth
 
 #from keys import client_id, #client_secret
 
-# port = 5000
+port = int(os.getenv('PORT'))
 
 def saved_songs_cleaner(data):    
     x = []
