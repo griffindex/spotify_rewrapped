@@ -10,9 +10,9 @@ matplotlib.use('Agg')
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
-from keys import client_id, client_secret
+from keys import client_id, #client_secret
 
-port = 5000
+# port = 5000
 
 def saved_songs_cleaner(data):    
     x = []
@@ -87,8 +87,8 @@ auth_manager = SpotifyOAuth(
 	'user-library-read'
 	],
 	client_id=client_id,
-	client_secret=client_secret,
-	redirect_uri=f"http://127.0.0.1:{port}",
+	#client_secret=client_secret,
+	redirect_uri=f"https://gc-test22.herokuapp.com/",
 	show_dialog=True
 	)
 
