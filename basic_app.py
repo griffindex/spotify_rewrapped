@@ -10,7 +10,7 @@ matplotlib.use('Agg')
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
-from keys import client_id, #client_secret
+#from keys import client_id, #client_secret
 
 # port = 5000
 
@@ -86,7 +86,7 @@ auth_manager = SpotifyOAuth(
 	'user-read-recently-played',
 	'user-library-read'
 	],
-	client_id=client_id,
+	client_id="fef890ff8f6f4081a9e7c40ef9324b49",
 	#client_secret=client_secret,
 	redirect_uri=f"https://gc-test22.herokuapp.com/",
 	show_dialog=True
