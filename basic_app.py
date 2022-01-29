@@ -6,13 +6,14 @@ import pandas as pd
 import mpld3
 import matplotlib
 matplotlib.use('Agg')
+import os
 
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
 #from keys import client_id, #client_secret
 
-port = int(os.getenv('PORT'))
+# port = int(os.getenv('PORT'))
 
 def saved_songs_cleaner(data):    
     x = []
@@ -87,7 +88,7 @@ auth_manager = SpotifyOAuth(
 	'user-library-read'
 	],
 	client_id="fef890ff8f6f4081a9e7c40ef9324b49",
-	client_secret= os.getenv("CLIENT_SECRET"),
+	client_secret= os.environ.get('CLIENT_SECRET'),
 	redirect_uri=f"https://gc-test22.herokuapp.com/",
 	show_dialog=True
 	)
@@ -197,4 +198,4 @@ def login_function():
 
 
 if __name__ == '__main__':
-	app.run(debug=True, port=port)
+	app.run(debug=True)
