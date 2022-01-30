@@ -4,20 +4,150 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>User Data</title>
+
+	<!-- css styling taken from w3 schools templates -->
+	<style>
+		* {
+		  box-sizing: border-box;
+		}
+
+		body {
+		  font-family: Arial, Helvetica, sans-serif;
+		}
+
+		/* Style the header */
+		.header {
+		  background-color: #f1f1f1;
+		  padding: 30px;
+		  text-align: center;
+		  font-size: 35px;
+		}
+
+		/* Create three equal columns that floats next to each other */
+		.column_1 {
+		  float: left;
+		  width: 33.33%;
+		  padding: 10px;
+		  background-color: #f0f0f0;
+		}
+
+		.column_2 {
+		  float: left;
+		  width: 33.33%;
+		  padding: 10px;
+		}
+
+		.column_3 {
+			float: left;
+			width: 33.33%;
+			padding: 10px;
+		}
+
+		/* Clear floats after the columns */
+		.row:after {
+		  content: "";
+		  display: table;
+		  clear: both;
+		}
+
+		/* Style the footer */
+		.footer {
+		  background-color: #f1f1f1;
+		  padding: 10px;
+		  text-align: center;
+		}
+
+		/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+		@media (max-width: 600px) {
+		  .column {
+		    width: 100%;
+		  }
+		}
+
+		.song_info {
+			text-align: center, !important;
+		}
+
+		.album_art {
+			border-radius: 15px;
+			box-shadow: 5px 5px 2.5px 2.5px rgba(0, 0, 0, 0.2);
+		}
+	</style>
 </head>
+
 <body>
 	<div>
-		<button onclick="goBack()">Go Back</button>
-<script>
-function goBack() {
-  window.history.back();
-}
-</script>
+		<div>
+			<a href='/user_data?time_range=short_term'>Few Weeks</a>
+			<a href='/user_data?time_range=medium_term'>About a Month</a>
+			<a href='/user_data?time_range=long_term'>All Time</a>
+			<a href='/'>Home</a>
+		</div>
 
-		<h1>Audio Features Distributions</h1>
-		{{ summary|safe }}
-		<h1>Data</h1>
-		{{ data|safe }}
+
+		<div class='header'>
+			<h1>[User] Top Tracks and Data</h1>
+		</div>
+
+
+		<div class='row'>
+
+			<div class='column_1'>
+				<ol class='top_tracks_list'>
+					{% for index, row in data.head(10).iterrows() %}
+
+					<li>
+						<div class='list_item'>
+				
+							<img src='{{ row["img"] }}' alt='number {{ index +1 }} song: {{ row["song"] }}' class='album_art' style="width: 10rem; height: 10rem;">
+
+							<br>
+
+							<div class='song_info'>
+								<div class='song_name'>
+									<span><b>{{ row["song"] }}</b><span>
+								</div>
+								<div class='artist_name'>
+									<span>{{ ', '.join(row["artist"]) }}<span>
+								</div>
+								<div class='album_name'>
+									<span>{{ row["album"] }}</span>
+								</div>
+							</div>
+
+						</div>
+					</li>
+					<br>
+					
+					{% endfor %}
+				</ol>
+			</div>
+
+
+			<div class='column_2'>
+				<h2>Audio Features Distributions</h2>
+
+				<div class='plots_list'>
+				{% for name, svg in plots.items() %}
+					<li>
+						<div class='{{ name }}'>
+						{{ svg | safe }}
+							<div class='plot_text'>
+								<p>{{ name.capitalize() }}</p>
+							</div>
+						</div>
+					</li>
+				{% endfor %}
+				</div>
+				
+			</div>
+
+			<div class='column_3'>
+
+			</div>	
+			
+		</div>
+
 	</div>
 </body>
 <script>
