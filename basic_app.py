@@ -89,7 +89,7 @@ def home():
 def user_data():
 	
 
-	auth_manager.get_access_token(session.get('https://accounts.spotify.com/authorize'))
+	auth_manager.get_access_token(as_dict=True, check_cache=True)
 	sp = spotipy.Spotify(auth_manager=auth_manager)
 
 
