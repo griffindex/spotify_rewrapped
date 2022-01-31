@@ -83,7 +83,7 @@ def home():
 	# initial load in template this renders essentially only renders on the first load
 	return render_template('index.html')
 
-@app.route('/user_data')
+@app.route('/user_data', methods=['GET'])
 def user_data():
 	
 
