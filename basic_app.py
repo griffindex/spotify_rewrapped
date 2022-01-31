@@ -75,10 +75,10 @@ auth_manager = SpotifyOAuth(
 def home():
 
 	# executes if api sends a get request with the 'code' argument
-	if request.args.get('code'):
+	if request.args.get('https://accounts.spotify.com/authorize'):
 		
 		# this saves the auth token into a session object
-		session['access_token'] = request.args.get('code')
+		session['access_token'] = request.args.get('https://accounts.spotify.com/authorize')
 
 		return redirect('/user_data')
 
