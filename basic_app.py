@@ -83,11 +83,21 @@ def home():
 	# initial load in template this renders essentially only renders on the first load
 	return render_template('index.html')
 
+
+# this route is essentially only the middleman so the page doesnt save
+@app.route('/login', methods=['POST'])
+def login_function():
+
+	auth_url = auth_manager.get_authorize_url()
+	return redirect(auth_url)
+
+
+
 @app.route('/user_data')
 def user_data():
 	
 	
-	#auth_manager.get_access_token(session.get('access_token'))
+	auth_manager.get_access_token(session.get('access_token'))
 	sp = spotipy.Spotify(auth_manager=auth_manager)
 
 
@@ -153,15 +163,6 @@ def user_data():
 
 	# if neither condition is met
 	return '<a href="/">Home</a>'
-
-
-
-# this route is essentially only the middleman so the page doesnt save
-@app.route('/login', methods=['POST'])
-def login_function():
-
-	auth_url = auth_manager.get_authorize_url()
-	return redirect(auth_url)
 
 
 
