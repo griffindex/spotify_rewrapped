@@ -86,8 +86,8 @@ def home():
 @app.route('/user_data')
 def user_data():
 	
-	session['access_token'] = request.args.get('code')
-	auth_manager.get_access_token(session.get('access_token'))
+	
+	#auth_manager.get_access_token(session.get('access_token'))
 	sp = spotipy.Spotify(auth_manager=auth_manager)
 
 
