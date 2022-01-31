@@ -56,8 +56,6 @@ app = Flask(__name__)
 app.secret_key = 'wowza'
 
 
-
-
 auth_manager = SpotifyOAuth(
 	scope=['user-top-read',
 	'user-read-recently-played',
@@ -89,7 +87,7 @@ def home():
 def user_data():
 	
 
-	auth_manager.get_access_token(code='access_token', as_dict=False, check_cache=True)
+	auth_manager.get_access_token(session.pop('access_token', None))
 	sp = spotipy.Spotify(auth_manager=auth_manager)
 
 
