@@ -87,7 +87,7 @@ def home():
 def user_data():
 	
 	
-	auth_manager.get_access_token(code=None, check_cache=True)
+	auth_manager.get_access_token(state=None, response=None, check_cache=True)
 	sp = spotipy.Spotify(auth_manager=auth_manager)
 
 
