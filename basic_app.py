@@ -99,8 +99,8 @@ def home():
 @app.route('/user_data')
 def user_data():
 	
-	
-	auth_manager.get_access_token(session.get('access_token'))
+	cache_handler = spotipy.cache_handler.CacheFileHandler(cache_path=session_cache_path())
+	auth_manager.validate_token(cache_handler.get_cached_token())
 	sp = spotipy.Spotify(auth_manager=auth_manager)
 
 
