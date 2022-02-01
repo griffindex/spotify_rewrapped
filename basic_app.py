@@ -79,7 +79,7 @@ def home():
 	if request.args.get('code'):
 		
 		# this saves the auth token into a session object
-		session['access_token'] = request.args.get('code')
+		# session['access_token'] = request.args.get('code')
 
 		return redirect('/user_data')
 
@@ -90,7 +90,7 @@ def home():
 def user_data():
 
 
-	auth_manager.get_access_token(session.get('access_token'))
+	auth_manager.get_access_token('access_token'))
 	sp = spotipy.Spotify(auth_manager=auth_manager)
 
 
