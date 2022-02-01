@@ -64,6 +64,7 @@ auth_manager = SpotifyOAuth(
 	client_id="fef890ff8f6f4081a9e7c40ef9324b49",
 	client_secret= os.environ.get('CLIENT_SECRET'),
 	redirect_uri='https://gc-test22.herokuapp.com',
+	cache_handler=None,
 	show_dialog=True
 	)
 
@@ -87,7 +88,7 @@ def home():
 def user_data():
 	
 	
-	auth_manager.get_access_token(request.args.get("code"))
+	auth_manager.get_access_token(session.get('access_token'))
 	sp = spotipy.Spotify(auth_manager=auth_manager)
 
 
