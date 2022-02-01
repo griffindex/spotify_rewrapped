@@ -58,14 +58,12 @@ def top_artists_cleaner(data):
 app = Flask(__name__)
 app.secret_key = 'wowza'
 
-caches_folder = '.cache'
+caches_folder = '/.cache'
 if not os.path.exists(caches_folder):
     os.makedirs(caches_folder)
 
 def session_cache_path():
     return caches_folder + session.get('access_token')
-
-cache_handler = spotipy.cache_handler.CacheFileHandler(cache_path=session_cache_path())
 
 auth_manager = SpotifyOAuth(
 	scope=['user-top-read',
@@ -75,7 +73,6 @@ auth_manager = SpotifyOAuth(
 	client_id="fef890ff8f6f4081a9e7c40ef9324b49",
 	client_secret= os.environ.get('CLIENT_SECRET'),
 	redirect_uri='https://gc-test22.herokuapp.com',
-	cache_handler=cache_handler,
 	show_dialog=True
 	
 	)
