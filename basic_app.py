@@ -18,6 +18,7 @@ matplotlib.use('Agg')
 # spotify api authorization and call handling library
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+from spotipy.cache_handler import CacheFileHandler, CacheHandler
 
 # local python files (use for localhost)
 # from keys import client_id, client_secret
@@ -58,13 +59,6 @@ def top_artists_cleaner(data):
 app = Flask(__name__)
 app.secret_key = 'wowza'
 
-caches_folder = '/.cache'
-if not os.path.exists(caches_folder):
-    os.makedirs(caches_folder)
-
-def session_cache_path():
-    return caches_folder + session.get('access_token')
-
 auth_manager = SpotifyOAuth(
 	scope=['user-top-read',
 	'user-read-recently-played',
@@ -74,7 +68,6 @@ auth_manager = SpotifyOAuth(
 	client_secret= os.environ.get('CLIENT_SECRET'),
 	redirect_uri='https://gc-test22.herokuapp.com',
 	show_dialog=True
-	
 	)
 
 
@@ -95,9 +88,9 @@ def home():
 
 @app.route('/user_data')
 def user_data():
-	
-	cache_handler = spotipy.cache_handler.CacheFileHandler(cache_path=session_cache_path())
-	auth_manager.validate_token(cache_handler.get_cached_token())
+
+
+	auth_manager.refresh_access_token(session.get('access_token'))
 	sp = spotipy.Spotify(auth_manager=auth_manager)
 
 
