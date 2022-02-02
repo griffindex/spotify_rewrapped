@@ -59,6 +59,19 @@ def top_artists_cleaner(data):
 app = Flask(__name__)
 app.secret_key = 'wowza'
 
+# function passed to jinja
+@app.context_processor
+def track_string_format():
+	
+	def delengthener(name: str):
+	
+		if len(name) > 20:
+			return name[:20] + '...'
+	
+		return name
+
+
+	return dict(delengthener=delengthener)
 auth_manager = SpotifyOAuth(
 	scope=['user-top-read',
 	'user-read-recently-played',
@@ -88,18 +101,25 @@ def home():
 
 @app.route('/user_data')
 def user_data():
+	
 
-
-	auth_manager.get_access_token('access_token')
+	auth_manager.get_access_token(session.get('access_token'))
 	sp = spotipy.Spotify(auth_manager=auth_manager)
 
 
 	if not request.args.get('time_range'):
-		return redirect('/user_data?time_range=short_term')
+		return redirect('/user_data?time_range=short_term&search=tracks')
+
+	# checks url for a num argument and assigns num variable to the arg
+	# default is 10
+	if request.args.get('num'):
+		num = int(request.args.get('num'))
+	else:
+		num = 10
 
 
-	# return your top features and a matplot viz
-	if request.args.get('time_range'):
+	# return your top tracks and a matplot viz
+	if request.args.get('search') == 'tracks':
 
 		# api call to get top songs in some range, clean and set as df
 		time_range = request.args['time_range']
@@ -112,14 +132,6 @@ def user_data():
 
 		# saving IDs for future calls
 		id_list = df['id'].to_list()
-
-
-
-		# api call to get top artists
-		artists_json = sp.current_user_top_artists(limit=50, time_range=time_range)
-		top_artists_df = pd.DataFrame(top_artists_cleaner(artists_json))
-
-
 
 		# api call to grab the features of those songs from their IDs
 		features_json = sp.audio_features(id_list)
@@ -150,9 +162,53 @@ def user_data():
 
 		features = merged[['danceability', 'energy', 'speechiness', 'acousticness', 'instrumentalness', 'liveness', 'valence']]
 
+		return render_template(
+			'user_data.html',
+			plots=histogram_svg_elements,
+			data=merged,
+			time=time_range,
+			num=num
+			)
+
+	
+	#return your top artists
+	if request.args.get('search') == 'artists':
+
+		# api call to get top songs in some range, clean and set as df
+		time_range = request.args['time_range']
+
+		# calling for the user data and simultaneously cleaning/framing
+		df = pd.DataFrame(
+			top_artists_cleaner(
+				sp.current_user_top_artists(limit=50, time_range=time_range)))
 
 
-		return render_template('user_data.html', plots=histogram_svg_elements, data=merged)
+		# collecting genres
+		genre_dict = {}
+		for genre_list in df['genres'].to_list():
+			for genre in genre_list:
+				for word in genre.split():
+					if word not in genre_dict:
+						genre_dict[word] = 1
+					else:
+						genre_dict[word] += 1
+		
+		# grab top user genres
+		top_10_genre_2dlist = sorted(genre_dict.items(), key=lambda item: item[1])[:10]
+
+		# ax = sns.barplot(data=top_10_genre_2dlist)
+		# genre_plot = ax.get_figure()
+
+		return str(top_10_genre_2dlist) 
+		# render_template(
+		# 	'user_data_artists.html',
+		# 	data=df,
+		# 	time=time_range,
+		#	num=num
+		# 	)
+
+
+
 
 	# if neither condition is met
 	return '<a href="/">Home</a>'
@@ -162,7 +218,6 @@ def user_data():
 # this route is essentially only the middleman so the page doesnt save
 @app.route('/login', methods=['POST'])
 def login_function():
-
 	auth_url = auth_manager.get_authorize_url()
 	return redirect(auth_url)
 
