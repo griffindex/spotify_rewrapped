@@ -79,7 +79,7 @@ auth_manager = SpotifyOAuth(
 	],
 	client_id="fef890ff8f6f4081a9e7c40ef9324b49",
 	client_secret= os.environ.get('CLIENT_SECRET'),
-	redirect_uri='https://gc-test22.herokuapp.com',
+	redirect_uri='https://utdatagp.herokuapp.com/',
 	show_dialog=True
 	)
 
